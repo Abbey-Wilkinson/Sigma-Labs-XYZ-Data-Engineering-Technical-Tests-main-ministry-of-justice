@@ -88,7 +88,7 @@ def get_tribunal_info_from_postcode(person: dict) -> list[dict]:
     postcode = person["home_postcode"]
 
     if 8 < len(postcode) < 6:
-        return "Error. Invalid postcode."
+        return {"message": f'Invalid postcode {postcode}'}
     digit_count = 0
     for letter in postcode:
         if letter.isdigit():
@@ -101,7 +101,9 @@ def get_tribunal_info_from_postcode(person: dict) -> list[dict]:
 
     data = response.json()
 
-    return data
+    if data:
+        return data
+    return "Error. No data."
 
 
 def find_wanted_court_type(person: dict, courts: list[dict]) -> list[dict]:
@@ -115,7 +117,6 @@ def find_wanted_court_type(person: dict, courts: list[dict]) -> list[dict]:
 
         if type == []:
             continue
-
         else:
             new_type = type[0]
 
@@ -125,7 +126,7 @@ def find_wanted_court_type(person: dict, courts: list[dict]) -> list[dict]:
     return potential_courts
 
 
-def get_minimum_distance_of_potential_courts(potential_courts: list[dict]):
+def get_minimum_distance_of_potential_courts(potential_courts: list[dict]) -> dict:
 
     min_distance_court = min(
         potential_courts, key=lambda court: court['distance'])
@@ -133,17 +134,13 @@ def get_minimum_distance_of_potential_courts(potential_courts: list[dict]):
     return min_distance_court
 
 
-def find_dx_number_of_closest_court(closest_court: dict):
+def find_dx_number_of_closest_court(closest_court: dict) -> str:
     return closest_court["dx_number"]
 
 
 def main():
 
     people = load_people_csv("people.csv")
-
-    names = []
-    desired_court = []
-    home_postcode = []
 
     closest_tribunal_df = pd.DataFrame({
                                        "name": [],
