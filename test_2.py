@@ -69,6 +69,87 @@
 # - the dx_number (if available) of the nearest court of the right type
 # - the distance to the nearest court of the right type
 
+import pandas as pd
+import requests
+
+BASE_POSTCODE_REQUEST = "https://www.find-court-tribunal.service.gov.uk/search/results.json?postcode="
+
+
+def load_people_csv(csv_file) -> list[dict]:
+    people = pd.read_csv(csv_file)
+
+    people = people.to_dict('records')
+
+    return people
+
+
+def get_tribunal_info_from_postcode(person: dict) -> list[dict]:
+
+    postcode = person["home_postcode"]
+
+    response = requests.get(
+        f'{BASE_POSTCODE_REQUEST}{postcode.upper()}')
+
+    data = response.json()
+
+    return data
+
+
+def find_wanted_court_type(person: dict, courts: list[dict]) -> list[dict]:
+
+    wanted_type = person["looking_for_court_type"]
+
+    potential_courts = []
+
+    for court in courts:
+        type = court["types"]
+
+        if type == []:
+            continue
+
+        else:
+            new_type = type[0]
+
+        if new_type == wanted_type:
+            potential_courts.append(court)
+
+    return potential_courts
+
+
+def get_minimum_distance_of_potential_courts(potential_courts: list[dict]):
+
+    min_distance_court = min(
+        potential_courts, key=lambda court: court['distance'])
+
+    return min_distance_court
+
+
+def main():
+
+    people = load_people_csv("people.csv")
+
+    names = []
+    desired_court = []
+    home_postcode = []
+
+    for person in people:
+        postcode = person["home_postcode"]
+        wanted_court = person["looking_for_court_type"]
+        tribunal_info = get_tribunal_info_from_postcode(person)
+        potential_courts = find_wanted_court_type(person, tribunal_info)
+        min_distance_court = get_minimum_distance_of_potential_courts(
+            potential_courts)
+
+
 if __name__ == "__main__":
     # [TODO]: write your answer here
-    pass
+    people = load_people_csv("people.csv")
+
+    tribunal_info = get_tribunal_info_from_postcode(people[0])
+
+    potential_courts = find_wanted_court_type(people[0], tribunal_info)
+    print(potential_courts)
+
+    min_distance_court = get_minimum_distance_of_potential_courts(
+        potential_courts)
+    print(min_distance_court)

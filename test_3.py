@@ -6,10 +6,13 @@
 # [TODO]: fix the function
 def sum_current_time(time_str: str) -> int:
     """Expects data in the format HH:MM:SS"""
+
+    if time_str == "":
+        return "Error. The time input cannot be empty."
     list_of_nums = time_str.split(":")
 
     if len(list_of_nums) != 3:
-        return "Invalid number in list."
+        return "Invalid time format."
 
     list_of_int_nums = []
 
@@ -20,15 +23,14 @@ def sum_current_time(time_str: str) -> int:
         except ValueError:
             return "Error! Incorrect time_str format, must only contain integers and :"
 
-    for num in list_of_nums:
+    for num in list_of_int_nums:
 
-        if len(num) != 1 or len(num) != 2:
+        if len(str(num)) != 1 and len(str(num)) != 2:
             return "Error, number is too long. Incorrect format."
 
-    print(list_of_int_nums)
     return sum(list_of_int_nums)
 
 
 if __name__ == "__main__":
 
-    print(sum_current_time("01:0222:03"))
+    print(sum_current_time("11:22:03"))

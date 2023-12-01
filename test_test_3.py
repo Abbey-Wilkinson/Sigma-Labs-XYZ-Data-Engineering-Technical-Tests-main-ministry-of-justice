@@ -3,28 +3,34 @@
 from test_3 import sum_current_time
 
 
+def test_sum_current_time_incorrect_time_format_empty():
+    time_str = ""
+    sum = sum_current_time(time_str)
+    assert sum == "Error. The time input cannot be empty."
+
+
 def test_sum_current_time_incorrect_time_format_too_short():
     time_str = "01:02"
     sum = sum_current_time(time_str)
-    assert sum == "Invalid number in list."
+    assert sum == "Invalid time format."
 
 
 def test_sum_current_time_incorrect_time_format_too_short_2():
     time_str = "01"
     sum = sum_current_time(time_str)
-    assert sum == "Invalid number in list."
+    assert sum == "Invalid time format."
 
 
 def test_sum_current_time_incorrect_time_format_too_long():
     time_str = "01:02:03:04"
     sum = sum_current_time(time_str)
-    assert sum == "Invalid number in list."
+    assert sum == "Invalid time format."
 
 
 def test_sum_current_time_incorrect_time_format_too_long_2():
     time_str = "01:02:03:04:76453"
     sum = sum_current_time(time_str)
-    assert sum == "Invalid number in list."
+    assert sum == "Invalid time format."
 
 
 def test_sum_current_time_incorrect_time_format_letters_in_time():
@@ -45,7 +51,7 @@ def test_sum_current_time_incorrect_time_format_numbers_too_long():
     assert sum == "Error, number is too long. Incorrect format."
 
 
-def test_sum_current_time_incorrect_time_format_numbers_too_long():
+def test_sum_current_time_incorrect_time_format_numbers_too_long_2():
     time_str = "01:222:03"
     sum = sum_current_time(time_str)
     assert sum == "Error, number is too long. Incorrect format."
