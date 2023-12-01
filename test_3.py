@@ -27,10 +27,13 @@ def sum_current_time(time_str: str) -> int:
 
         if len(str(num)) != 1 and len(str(num)) != 2:
             return "Error, number is too long. Incorrect format."
+        if num < 0:
+            return "Error. Must be a positive number."
 
     return sum(list_of_int_nums)
 
 
 if __name__ == "__main__":
 
-    print(sum_current_time("11:22:03"))
+    # Test to ensure function works
+    print(sum_current_time("-1:22:03"))

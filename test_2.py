@@ -87,6 +87,15 @@ def get_tribunal_info_from_postcode(person: dict) -> list[dict]:
 
     postcode = person["home_postcode"]
 
+    if 8 < len(postcode) < 6:
+        return "Error. Invalid postcode."
+    digit_count = 0
+    for letter in postcode:
+        if letter.isdigit():
+            digit_count += 1
+    if 3 < digit_count < 1:
+        return {"message": f'Invalid postcode {postcode}'}
+
     response = requests.get(
         f'{BASE_POSTCODE_REQUEST}{postcode.upper()}')
 
@@ -124,6 +133,10 @@ def get_minimum_distance_of_potential_courts(potential_courts: list[dict]):
     return min_distance_court
 
 
+def find_dx_number_of_closest_court(closest_court: dict):
+    return closest_court["dx_number"]
+
+
 def main():
 
     people = load_people_csv("people.csv")
@@ -132,24 +145,42 @@ def main():
     desired_court = []
     home_postcode = []
 
+    closest_tribunal_df = pd.DataFrame({
+                                       "name": [],
+                                       "type of court desired": [],
+                                       "home postcode": [],
+                                       "nearest court of desired type": [],
+                                       "dx_number": [],
+                                       "distance": []})
     for person in people:
+        name = person["person_name"]
         postcode = person["home_postcode"]
-        wanted_court = person["looking_for_court_type"]
+        desired_court = person["looking_for_court_type"]
         tribunal_info = get_tribunal_info_from_postcode(person)
         potential_courts = find_wanted_court_type(person, tribunal_info)
         min_distance_court = get_minimum_distance_of_potential_courts(
             potential_courts)
+        name_of_closest_court = min_distance_court["name"]
+        dx_number = find_dx_number_of_closest_court(min_distance_court)
+        if not dx_number:
+            dx_number = "NaN"
+        distance = min_distance_court["distance"]
+
+        new_row = {"name": name,
+                   "type of court desired": desired_court,
+                   "home postcode": postcode,
+                   "nearest court of desired type": name_of_closest_court,
+                   "dx_number": dx_number,
+                   "distance": distance}
+        new_row_df = pd.DataFrame([new_row])
+
+        closest_tribunal_df = pd.concat(
+            [closest_tribunal_df, new_row_df], ignore_index=True)
+
+    return closest_tribunal_df
 
 
 if __name__ == "__main__":
     # [TODO]: write your answer here
-    people = load_people_csv("people.csv")
-
-    tribunal_info = get_tribunal_info_from_postcode(people[0])
-
-    potential_courts = find_wanted_court_type(people[0], tribunal_info)
-    print(potential_courts)
-
-    min_distance_court = get_minimum_distance_of_potential_courts(
-        potential_courts)
-    print(min_distance_court)
+    # Will show a pd.Dataframe with the answers.
+    print(main())

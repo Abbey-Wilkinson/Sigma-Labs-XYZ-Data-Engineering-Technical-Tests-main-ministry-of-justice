@@ -54,7 +54,7 @@ def get_dict(line):
 
         if not datetime.strptime(date, "%d/%m/%y"):
             return False
-        elif error_type.upper() not in ["INFO", "WARNING", "ERROR", "CRITICAL", "TRACE"]:
+        elif error_type.upper() not in ["INFO", "WARNING", "TRACE"]:
             return False
         elif not message.startswith(":"):
             return False
