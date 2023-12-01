@@ -123,6 +123,9 @@ def find_wanted_court_type(person: dict, courts: list[dict]) -> list[dict]:
         if new_type == wanted_type:
             potential_courts.append(court)
 
+    if potential_courts == []:
+        return "Error. No courts found with that type."
+
     return potential_courts
 
 

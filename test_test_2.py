@@ -1,7 +1,7 @@
 """Test's for test_2 file."""
 import requests_mock
 import requests
-from test_2 import get_tribunal_info_from_postcode
+from test_2 import get_tribunal_info_from_postcode, find_wanted_court_type
 from test_2 import BASE_POSTCODE_REQUEST
 
 
@@ -57,3 +57,11 @@ def test_get_tribunal_info_from_postcode_too_long():
 
     assert get_tribunal_info_from_postcode(
         person) == {'message': 'Invalid postcode: CW81RRD'}
+
+
+def test_find_wanted_court_type_successful():
+    pass
+
+
+def test_find_wanted_court_type_no_courts_found():
+    pass
