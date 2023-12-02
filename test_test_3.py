@@ -1,4 +1,5 @@
 """Test's for test_3."""
+# pylint: disable=C0116, W0622
 
 from test_3 import sum_current_time
 
