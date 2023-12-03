@@ -1,3 +1,8 @@
+## Requirements
+
+`pip3 install -r requirements.txt`
+
+
 ## With More time
 
 ### test_2
